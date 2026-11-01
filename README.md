@@ -29,3 +29,6 @@ GitHub Pages is public hosting. The application source is public; customer data 
 - Customer balances are opening balance + all invoices - all recorded payments; payments are not assigned to individual invoices.
 - Stock cannot be negative during invoice creation; update stock in Products for restocking.
 - Do not clear browser/site data without exporting a backup.
+
+
+PDF fix: Invoice opens as an in-app preview, with a Print / Save PDF button and Back to POS. On iPhone, tap Print / Save PDF, then share the print preview to Files. Replace index.html and sw.js in GitHub to update.
