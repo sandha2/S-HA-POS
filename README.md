@@ -1,34 +1,22 @@
-# S&HA Wholesale POS — iPhone-first PWA MVP
+# S&HA Retail & Wholesale Cloud POS
 
-A static, offline-capable wholesale POS prototype. No server or API keys needed. **Data lives only in this browser/device** and may be erased by browser storage cleanup. It is not appropriate as the only record of a business. Export backups frequently.
+## Phone-only setup
+1. In your original POS, use More > Export Backup and save the JSON to Files. Do not delete the original app.
+2. Create a Supabase project. If new, run `schema.sql` once in Supabase SQL Editor. If you already ran the prior cloud schema, run **only** `upgrade_existing_cloud.sql`. Never rerun `schema.sql` over existing data.
+3. In your GitHub repository `sandha2/S-HA-POS`, upload `index.html`, `manifest.webmanifest`, `sw.js`, `icon.svg`, `icon-192.png`, `icon-512.png`, replacing the old files. Do NOT upload SQL files, JSON backups, secrets, or customer records to public GitHub.
+4. After GitHub Pages publishes, open the website in Safari. Enter your Supabase Project URL and **publishable/anon** key, never the service_role key. Sign in with the owner account.
+5. Set each product's **wholesale** and **retail** price. Retail invoices do not automatically award free items; wholesale invoices use eligible 12+1 promotions. Choose sale type before adding invoice lines.
+6. Verify invoice totals, stock deductions, employee permissions, and PDF printing with TEST data before using it for real business.
 
-## Features
-- Customers: name, store, phone, address, opening balance, notes
-- Products: sale price, cost, inventory, SKU, 12+1 promotion eligibility
-- Invoice creation with paid and free quantities, discounts, immediate payments, stock deduction
-- Invoice history and printable invoices; iPhone Print > Share > Save to Files creates a PDF
-- Customer outstanding balances and subsequent payment entries
-- JSON backup export/import
-- Offline app shell after initial successful load on HTTPS
-
-## Publish without a computer (GitHub Pages)
-1. On iPhone Safari, create a GitHub account and a new **public** repository, e.g. `sha-pos-demo`. **Do not put customer or business data in the repository.**
-2. Unzip the project using the iPhone Files app. On GitHub in Safari, open the repository and use **Add file > Upload files** (request desktop website if necessary) to upload `index.html`, `manifest.webmanifest`, `sw.js`, and `icon.svg` into the repository root. Commit the files.
-3. Repository **Settings > Pages > Build and deployment > Deploy from a branch**, choose `main` and `/ (root)`, then Save.
-4. Once deployed, visit `https://YOUR-USERNAME.github.io/sha-pos-demo/` in Safari.
-5. Safari Share > Add to Home Screen > Add. Open S&HA POS from the Home Screen.
-
-GitHub Pages is public hosting. The application source is public; customer data entered in the app stays in the iPhone's local browser storage, not GitHub. Anyone can access the empty app at the URL, and there is no account login. Do not use for sensitive or production data without authentication, server storage, secure backups, and testing.
-
-## Important limitations
-- This is a working **single-device MVP**, not cloud sync or a payment processor.
-- Inventory is manually entered; no barcode scanning yet.
-- Invoice numbers are sequential per local database; multiple devices could conflict.
-- Customer-specific pricing and returns are not implemented yet.
-- PDF is generated via browser print-to-PDF, not as a stored PDF file.
-- Customer balances are opening balance + all invoices - all recorded payments; payments are not assigned to individual invoices.
-- Stock cannot be negative during invoice creation; update stock in Products for restocking.
-- Do not clear browser/site data without exporting a backup.
+## Important
+- This is a development build and has not been tested against your live Supabase project.
+- Existing local POS records are not automatically deleted or synchronized. Import a saved JSON backup only once after testing.
+- This version keeps the existing cloud schema's employee permissions; do not use with live staff until row-level security and access controls are verified.
+- The public GitHub Pages site exposes its source code. Never paste database passwords or secret/service_role keys into the app.
+- A PDF invoice is NOT a database backup.
+- Product `retail_price` defaults to $0 after migration; configure prices before issuing retail invoices.
+- Existing wholesale invoices remain marked wholesale.
 
 
-PDF fix: Invoice opens as an in-app preview, with a Print / Save PDF button and Back to POS. On iPhone, tap Print / Save PDF, then share the print preview to Files. Replace index.html and sw.js in GitHub to update.
+## Branding update
+The logo now appears in the dashboard header and invoice preview/print view. Upload `brand-logo.png`, `icon-192.png`, `icon-512.png`, and the updated `index.html` to the GitHub repository root. iPhone Home Screen icons may require removing and re-adding the shortcut after backing up data; do NOT remove an existing app that contains unsynced local invoices. This package does not migrate or clear local records.
